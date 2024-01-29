@@ -56,10 +56,15 @@ public class Main {
     }
 
     static boolean isFlightInTime(Flight flight) {
-        int timeOfLanding = (flight.getDeparture() + flight.getDuration() + (diff.get(flight.getTo()) - diff.get(flight.getFrom()))) % 25;
         if (!isWeatherOk(getWeatherInCity(flight.getFrom(), flight.getDeparture()))
-                || !isWeatherOk(getWeatherInCity(flight.getTo(), timeOfLanding))) return false;
+                || !isWeatherOk(getWeatherInCity(flight.getTo(), getTimeOfLanding(flight)))) return false;
         return true;
+    }
+
+    private static int getTimeOfLanding(Flight flight) {
+        int time = flight.getDeparture() + flight.getDuration() + (diff.get(flight.getTo()) - diff.get(flight.getFrom()));
+        time = time < 0 ? time + 25 : time;
+        return time % 25;
     }
 
     static WeatherForecast getWeatherInCity(String city, int time) {
